@@ -8,7 +8,7 @@ Finally, when the user has reviewed the changes, it asks if the packages must be
 
 # Usage
 
-Use the same zypper argument that results in installing packages. Examples:
+Use the same zypper arguments that results in installing packages. Examples:
 
 - `zypperdiff up`
 - `zypperdiff dup`
