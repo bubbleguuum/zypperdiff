@@ -52,7 +52,7 @@ done
 
 # display diff using PAGER
 
-if [ -s $temp_pkg_diff ]; then
+if [ -s $temp_diff ]; then
     [ -z "$PAGER" ] && PAGER=less
     $PAGER $temp_diff
 
@@ -60,7 +60,7 @@ if [ -s $temp_pkg_diff ]; then
 
     read -p "Proceed to install packages (yn) ? " -n 1 -r
     echo
-    [[ ! $REPLY =~ ^[Y]$ ]] && exit 1
+    [[ ! $REPLY =~ ^[y]$ ]] && exit 1
 fi
 
-sudo zypper $zypper_command -y $*
+sudo zypper $zypper_command -y --auto-agree-with-licenses $*
