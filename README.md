@@ -6,6 +6,14 @@ It first downloads with zypper all packages to be installed.
 Then it shows in a pager (less, most, etc) the changelog difference (thus what's new) for each package.
 Finally, when the user has reviewed the changes, it asks if the packages must be installed.
 
+# Install
+
+```
+wget https://raw.githubusercontent.com/bubbleguuum/zypperdiff/master/zypperdiff && chmod +x zypperdiff
+```
+
+Then move file somewhere in your PATH.
+
 # Usage
 
 Use the same zypper arguments that results in installing packages. Examples:
