@@ -18,24 +18,30 @@ packages=$(find /var/cache/zypp/ -name '*.rpm')
 
 [ -z "$packages" ] && exit 0
 
-trap "rm -f $temp_chg $temp_diff" EXIT
+trap "rm -f $temp_chg $temp_diff $temp_pkg_diff" EXIT
 temp_chg=$(mktemp)
 temp_diff=$(mktemp)
+temp_pkg_diff=$(mktemp)
+
+pkg_sep=$(printf '=%.0s' {1..72})
 
 for f in $packages
 do
     package=$(rpm -q  --qf "%{NAME}" -p $f)
 
-    echo "============================" >> $temp_diff
-    echo "$package" >> $temp_diff
-    echo "============================" >> $temp_diff
-    echo >> $temp_diff
-    
     rpm -q -p --changelog $f > $temp_chg
-    
-    rpm -q $package --changelog | diff --unchanged-line-format= --old-line-format= --new-line-format='%L' - $temp_chg >> $temp_diff
+    rpm -q $package --changelog | diff --unchanged-line-format= --old-line-format= --new-line-format='%L' - $temp_chg > $temp_pkg_diff
 
-    echo >> $temp_diff
+    if [ -s $temp_pkg_diff ]; then
+
+	echo $pkg_sep >> $temp_diff
+	echo -e "\n$package: $(rpm -q --qf '%{SUMMARY}' $package)\n" >> $temp_diff
+	echo -e "$pkg_sep\n" >> $temp_diff
+
+	cat $temp_pkg_diff >> $temp_diff
+
+	echo -e "\n" >> $temp_diff
+    fi
     
 done
 
