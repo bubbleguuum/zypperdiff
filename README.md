@@ -1,6 +1,6 @@
 # zypperdiff
 
-This small utility is inspired by apt-listchanges.
+This small utility is inspired by apt-listchanges for listing changes when updating packages with zypper.
 
 It first downloads with zypper all packages to be installed.
 Then it shows in a pager (less, most, etc) the changelog difference (thus what's new) for each package.
