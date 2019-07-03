@@ -7,7 +7,7 @@ zypper_command=$1
 shift
 
 # clean package cache in /var/cache/zypp/ so we can easily determine exactly what packages are downloaded
-sudo zypper clean
+#sudo zypper clean
 
 # download packages only with -d option
 sudo zypper $zypper_command -d $* || exit 1
@@ -33,7 +33,7 @@ do
     
     rpm -q -p --changelog $f > $temp_chg
     
-    rpm -q $package --changelog | comm --nocheck-order -13 $temp_chg - >> $temp_diff
+    rpm -q $package --changelog | diff --unchanged-line-format= --old-line-format= --new-line-format='%L' - $temp_chg >> $temp_diff
 
     echo >> $temp_diff
     
