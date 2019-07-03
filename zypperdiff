@@ -7,7 +7,7 @@ zypper_command=$1
 shift
 
 # clean package cache in /var/cache/zypp/ so we can easily determine exactly what packages are downloaded
-#sudo zypper clean
+sudo zypper clean
 
 # download packages only with -d option
 sudo zypper $zypper_command -d $* || exit 1
