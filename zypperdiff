@@ -1,0 +1,53 @@
+#!/bin/sh
+
+zypper_command=$1
+
+[ -z "$1" ] && exit 1
+
+shift
+
+# clean package cache in /var/cache/zypp/ so we can easily determine exactly what packages are downloaded
+sudo zypper clean
+
+# download packages only with -d option
+sudo zypper $zypper_command -d $* || exit 1
+
+# compare changelogs between downloaded rpm packages and installed packages
+
+packages=$(find /var/cache/zypp/ -name '*.rpm')
+
+[ -z "$packages" ] && exit 0
+
+trap "rm -f $temp_chg $temp_diff" EXIT
+temp_chg=$(mktemp)
+temp_diff=$(mktemp)
+
+for f in $packages
+do
+    package=$(rpm -q  --qf "%{NAME}" -p $f)
+
+    echo "============================" >> $temp_diff
+    echo "$package" >> $temp_diff
+    echo "============================" >> $temp_diff
+    echo >> $temp_diff
+    
+    rpm -q -p --changelog $f > $temp_chg
+    
+    rpm -q $package --changelog | comm --nocheck-order -13 $temp_chg - >> $temp_diff
+
+    echo >> $temp_diff
+    
+done
+
+# display changelog diff using PAGER
+
+[ -z "$PAGER" ] && PAGER=less
+$PAGER $temp_diff
+
+# eventually proceed with install
+
+read -p "Proceed to install packages (yn) ? " -n 1 -r
+echo
+[[ ! $REPLY =~ ^[Y]$ ]] && exit 1
+
+sudo zypper $*
