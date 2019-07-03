@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 zypper_command=$1
 
