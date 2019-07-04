@@ -8,8 +8,6 @@ confdir=~/.config/$(basename $0)
 config=$confdir/config
 logdir=$confdir/logs
 
-echo $config
-
 [ -f $config ] && . $config
 
 shift
