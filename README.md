@@ -28,6 +28,15 @@ No need to invoke with `sudo` as the script already uses it to invoke zypper.
 
 IMPORTANT: running this script always clears the package cache in /var/cache/zypp !
 
+# Config
+
+Optionally, you can create file ~/.config/zypperdiff/config and add
+
+`enable_log=y`
+
+to save changelog diffs in  ~/.config/zypperdiff/logs whenever you proceed to install packages
+
+
 # Example diff output:
 
 ```

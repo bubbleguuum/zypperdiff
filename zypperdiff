@@ -4,6 +4,14 @@ zypper_command=$1
 
 [ -z "$1" ] && exit 1
 
+confdir=~/.config/$(basename $0)
+config=$confdir/config
+logdir=$confdir/logs
+
+echo $config
+
+[ -f $config ] && . $config
+
 shift
 
 # clean package cache in /var/cache/zypp/ so we can easily determine exactly what packages are downloaded
@@ -38,9 +46,7 @@ do
 
 	if [ -s $temp_pkg_diff ]; then
 
-	    echo $pkg_sep >> $temp_diff
-	    echo -e "\n$package: $(rpm -q --qf '%{SUMMARY}' $package)\n" >> $temp_diff
-	    echo -e "$pkg_sep\n" >> $temp_diff
+	    echo -e "$pkg_sep\n$package: $(rpm -q --qf '%{SUMMARY}' $package)\n$pkg_sep\n" >> $temp_diff
 
 	    cat $temp_pkg_diff >> $temp_diff
 
@@ -64,3 +70,7 @@ if [ -s $temp_diff ]; then
 fi
 
 sudo zypper $zypper_command -y --auto-agree-with-licenses $*
+
+if (( $? == 0 )) && [[ $enable_log == y ]]; then
+   mkdir -p $logdir && mv $temp_diff $logdir/$(date +%FT%T).txt
+fi   
