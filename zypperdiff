@@ -24,10 +24,12 @@ packages=$(find /var/cache/zypp/ -name '*.rpm')
 
 [ -z "$packages" ] && exit 0
 
-trap "rm -f $temp_chg $temp_diff $temp_pkg_diff" EXIT
+
 temp_chg=$(mktemp)
 temp_diff=$(mktemp)
 temp_pkg_diff=$(mktemp)
+
+trap "rm -f $temp_chg $temp_diff $temp_pkg_diff" EXIT
 
 pkg_sep=$(printf '=%.0s' {1..72})
 
